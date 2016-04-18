@@ -133,6 +133,19 @@ a:hover { color: #ffffff }
   color: gray;
   margin-top: 120%;
 }
+#jspsych-button-response-button-0 {
+
+  box-shadow: 0px 0px 8px #fff;
+}
+#jspsych-button-response-button-1 {
+
+  box-shadow: 0px 0px 8px #fff;
+}
+#jspsych-button-response-button-2 {
+  position: absolute;
+  margin-top: 20%;
+  box-shadow: 0px 0px 8px #fff;
+}
     .left {
 	position: absolute;
 	top: 200px;
@@ -206,7 +219,7 @@ function exportToCsv(filename, rows) {
 
 
     // we need to query for key "1"/"left cursor" or "6"/"right cursor" 
-    var instructions = "<p>In this game, you will be asked to make some choices between getting some amount of money right now or waiting instead to get a larger amount of money in the future.</p><br/><p>These money amounts are pretend. You won't actually get these amounts of money for this game, but we ask you to choose between the amounts of money as if they were real.</p><br/><p>You need to use the left and right buttons to make each choice, and you can take as much time as you need to make your choice.</p><br/><p>Touch to begin.</p>";
+    var instructions = "<p>In this game, you will be asked to make some choices between getting some amount of money right now or waiting instead to get a larger amount of money in the future.</p><br/><p>These money amounts are pretend. You won't actually get these amounts of money for this game, but we ask you to choose between the amounts of money as if they were real.</p><br/><p>You need to use the left and right buttons to make each choice, and you can take as much time as you need to make your choice.</p><br/><p>Press the button to begin.</p>";
 
     var instructions2 = "<p>Press '8' for left choice, press '9' for right choice.</p>";
 
@@ -474,10 +487,11 @@ var test_block = {
 };
 
     var timeline = [];
-    timeline.push( { type: 'text', cont_key: 'mouse', text: instructions } );
+    timeline.push( { type: 'button-response', choices: ['l','r','->'], is_html: true,
+	     stimulus: instructions } );
     //timeline.push( { type: 'text', text: instructions2 } );
     timeline.push( test_block );
-    timeline.push( { type: 'text', cont_key: 'mouse', text: thanks } ); 
+    timeline.push( { type: 'button-response', choices: ['->'], is_html: true, stimulus: thanks } ); 
 
     jsPsych.init({
 	timeline: timeline,
