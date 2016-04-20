@@ -320,8 +320,8 @@ function getState(t) {
 	    screenText2[now] = "now";
 	    screenText2[1-now] = "in " + delay;
 	    
-            screenText[now] = "gain " + screenText[now];
-	    screenText[1-now] = "gain " + screenText[1-now];
+            screenText[now] = "get " + screenText[now];
+	    screenText[1-now] = "get " + screenText[1-now];
 	    
             if (gn_keystroke > 0) {
 		firsttime = 1;

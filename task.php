@@ -125,7 +125,8 @@ a:hover { color: #ffffff }
 .date2 { color: #bbc3c8; background: #292929; display: inline-block; font-family: 'Georgia', serif; font-style: italic; font-size: 18px; line-height: 22px; margin: 0 0 20px 18px; padding: 10px 12px 8px; position: absolute; bottom: -36px; }
 
 .jspsych-btn {
-  margin-right: 30px;
+  margin-left: 80px;
+  margin-right: 80px;
   border-radius: 40px;
   width: 80px;
   height: 80px;
@@ -334,8 +335,8 @@ function getState(t) {
 	    screenText2[now] = "now";
 	    screenText2[1-now] = "in " + delay;
 	    
-            screenText[now] = "gain " + screenText[now];
-	    screenText[1-now] = "gain " + screenText[1-now];
+            screenText[now] = "get " + screenText[now];
+	    screenText[1-now] = "get " + screenText[1-now];
 	    
             if (gn_keystroke > 0) {
 		firsttime = 1;
@@ -455,7 +456,7 @@ var all_trials = Array.apply(null, { length: 1168 }).map(function(a) { return [c
 t = 6; // this is a time - but we control time differently here... we should not use that t parameter
 var test_block = {
     type: 'single-stim',
-    choices: ['l','r'],
+    choices: ['L','R'],
     timeline: all_trials,
     on_finish: function(data) {
 	if (data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('esc'))
