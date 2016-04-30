@@ -205,11 +205,9 @@ function exportToCsv(filename, rows) {
 
 
     // we need to query for key "1"/"left cursor" or "6"/"right cursor" 
-    var instructions = "<p>Please choose the amount and delay combination you prefer between each pair of options.</p><br/><p>Press 5 to continue.</p>";
+    var instructions = "<p>In this game, you will be asked to make some choices between getting some amount of money right now or waiting instead to get a larger amount of money in the future.</p><br/><p>These money amounts are pretend. You won’t actually get these amounts of money for this game, but we ask you to choose between the amounts of money as if they were real.</p><br/><p>You need to use the left and right arrow keys to make each choice, and you can take as much time as you need to make your choice.</p><br/><p>Press spacebar to start.</p>";
 
-    var instructions2 = "<p>Press '8' for left choice, press '9' for right choice.</p>";
-
-    var thanks = "<p>Thank you for participating!</p>";
+    var thanks = "<center><p>Thank you for participating!</p></center>";
 
 // settings (Discounting-ABCD($100).py, AdjAmt discounting everything.py)
 sid = SubjectID;
@@ -224,8 +222,10 @@ amountD = "100";
 amountI = "100";
 directory = "data/" + Site;
 customdelays = 'n';
-delays=['1 day', '1 week', '1 month', '3 months', '1 year', '5 years', '25 years'];
-xx = [1,7,30.44,91.32,365.25,1826.25,9131.25];
+//delays=['1 day', '1 week', '1 month', '3 months', '1 year', '5 years', '25 years'];
+//xx = [1,7,30.44,91.32,365.25,1826.25,9131.25];
+delays=['1 day', '1 week', '1 month', '3 months', '1 year', '5 years'];
+xx = [1,7,30.44,91.32,365.25,1826.25];
 
 tr_len = 2; // how long each stimulus is displayed?
 x1 = Array.apply(null, { length: 5 }).map(Number.call, Number).map(function(a) { return a+1; });
@@ -320,8 +320,8 @@ function getState(t) {
 	    screenText2[now] = "now";
 	    screenText2[1-now] = "in " + delay;
 	    
-            screenText[now] = "gain " + screenText[now];
-	    screenText[1-now] = "gain " + screenText[1-now];
+            screenText[now] = "get " + screenText[now];
+	    screenText[1-now] = "get " + screenText[1-now];
 	    
             if (gn_keystroke > 0) {
 		firsttime = 1;
@@ -445,7 +445,11 @@ var test_block = {
     timeline: all_trials,
     on_finish: function(data) {
 	if (data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('esc'))
-	    jsPsych.endCurrentTimeline();
+	   jsPsych.endCurrentTimeline();
+	// detect if the current run is a crosshair - don't do anything in this case		  
+        if (jsPsych.data.getLastTrialData().stimulus[0].indexOf('crosshair') > 0) {
+	  return;		  
+        }
 	jsPsych.data.addDataToLastTrial({
 	    choice1: screenText[0] + " " + screenText2[0],
 	    choice2: screenText[1] + " " + screenText2[1],
@@ -454,7 +458,7 @@ var test_block = {
 	    t: jsPsych.totalTime() / 1000.0,
 	    amount: amountI*amount,
 	    delays: delays[currentdelay],
-	    response: response,
+	    response: (response == "1" ? "delayed" : "immediate"),
 	    now: now
 	});
 
@@ -472,36 +476,41 @@ var test_block = {
     }
 };
 
-    var timeline = [];
-    timeline.push( { type: 'text', text: instructions } );
-    timeline.push( { type: 'text', text: instructions2 } );
-    timeline.push( test_block );
-    timeline.push( { type: 'text', text: thanks } ); 
+var timeline = [];
+timeline.push( { type: 'text', text: instructions } );
+timeline.push( test_block );
+timeline.push( { type: 'text', text: thanks } ); 
 
-    jsPsych.init({
-	timeline: timeline,
-	on_finish: function(data) {
-	    // we should store the delays and IPs as well
-	    var d = {};
-	    sorteddelays.forEach(function( val, key) { d["IP "+val] = IPs[key]; });
-	    jsPsych.data.addDataToLastTrial(d);
-	    
-	    jQuery.post('code/php/events.php',
-			{ "data": JSON.stringify(jsPsych.data.getData()), "date": moment().format() }, function(data) {
-			    if (typeof data.ok == 'undefined' || data.ok == 0) {
-				//  alert('Error: ' + data.message);
-			    }
-			    // export as csv for download on client
-			    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID + "_" + Session + "_" + moment().format() + ".csv",
-		  			jsPsych.data.getData());
-			}).error(function() {
-			    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID + "_" + Session + "_" + moment().format() + ".csv",
-		  			jsPsych.data.getData());			
-	    });
-	     
-       }
-    });
-    
+jsPsych.init({
+    timeline: timeline,
+    on_finish: function(data) {
+	// we should store the delays and IPs as well
+	var d = {};
+	sorteddelays.forEach(function( val, key) { d["IP "+val] = IPs[key]; });
+	jsPsych.data.addDataToLastTrial(d);
+	
+	jQuery.post('code/php/events.php',
+		    {
+			"data": JSON.stringify(jsPsych.data.getData()),
+			"date": moment().format()
+		    },
+		    function(data) {
+			if (typeof data.ok == 'undefined' || data.ok == 0) {
+			    alert('Error saving data on server: ' + data.message);
+			}
+			// export as csv for download on client
+			exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID +
+				    "_" + Session + "_" + moment().format() + ".csv",
+		  		    jsPsych.data.getData());
+	}).error(function() {
+	    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID +
+			"_" + Session + "_" + moment().format() + ".csv",
+ 		  	jsPsych.data.getData());			
+	});
+	// we are done and should go back to the front-page
+    }
+});
+
 </script>
 </html>
     

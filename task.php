@@ -222,8 +222,12 @@ function exportToCsv(filename, rows) {
 
     var instructions2 = "<p>Press '8' for left choice, press '9' for right choice.</p>";
 
-    var thanks = "<p>Thank you for participating!</p>";
+    var thanks = "<center><p>Thank you for participating!</p></center>";
 
+//
+// The following code has been translated from python code originally written by
+// Micky Koffarnus at Virginia Tech.
+//
 // settings (Discounting-ABCD($100).py, AdjAmt discounting everything.py)
 sid = SubjectID;
 exp = Session;
@@ -237,9 +241,11 @@ amountD = "100";
 amountI = "100";
 directory = "data/" + Site;
 customdelays = 'n';
-delays=['1 day', '1 week', '1 month', '3 months', '1 year', '5 years', '25 years'];
-xx = [1,7,30.44,91.32,365.25,1826.25,9131.25];
-
+// Original delays contained a 25/9131.25 years option, possible would also be a 6 hour question			
+// delays=['1 day', '1 week', '1 month', '3 months', '1 year', '5 years', '25 years'];
+// xx = [1,7,30.44,91.32,365.25,1826.25,9131.25];
+delays=['1 day', '1 week', '1 month', '3 months', '1 year', '5 years'];
+xx = [1,7,30.44,91.32,365.25,1826.25];
 tr_len = 2; // how long each stimulus is displayed?
 x1 = Array.apply(null, { length: 5 }).map(Number.call, Number).map(function(a) { return a+1; });
 x2 = x1.map(function(a) { return a/2.0; });
