@@ -502,7 +502,7 @@ jsPsych.init({
 			exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID +
 				    "_" + Session + "_" + moment().format() + ".csv",
 		  		    jsPsych.data.getData());
-	}).error(function() {
+	}, 'json').error(function() {
 	    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID +
 			"_" + Session + "_" + moment().format() + ".csv",
  		  	jsPsych.data.getData());			

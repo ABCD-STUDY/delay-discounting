@@ -514,7 +514,7 @@ var test_block = {
 			    // export as csv for download on client
 			    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID + "_" + Session + "_" + moment().format() + ".csv",
 		  			jsPsych.data.getData());
-			}).error(function() {
+			},'json').error(function() {
 			    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID + "_" + Session + "_" + moment().format() + ".csv",
 		  			jsPsych.data.getData());			
 	    });
