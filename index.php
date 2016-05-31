@@ -242,7 +242,9 @@
             <div class="modal-body">
               <div>
                 <button id="open-delayed-discounting1-button" type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Start Delay-Discounting-Task (touch)</button> &nbsp;
+<?php if ($admin): ?>
                 <button id="open-delayed-discounting2-button" type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-save"></i> Start Delay-Discounting-Task (keyboard)</button> &nbsp;
+<?php endif; ?>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>&nbsp;
               </div>
             </div><!-- /.modal-body -->
