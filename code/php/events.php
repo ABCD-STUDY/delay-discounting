@@ -24,7 +24,7 @@
      }
   }
   if ($site == "") {
-     echo (json_encode ( array( "message" => "Error: no site assigned to this user" ) ) );
+     echo (json_encode ( array( "ok" => 0, "message" => "Error: no site assigned to this user" ) ) );
      return;
   }
 
@@ -39,25 +39,44 @@
       if (isset($_SESSION['ABCD']['delay-discounting']['sessionid'])) {
          $sessionid  = $_SESSION['ABCD']['delay-discounting']['sessionid'];
       }      
+      if (isset($_SESSION['ABCD']['delay-discounting']['run'])) {
+         $run  = $_SESSION['ABCD']['delay-discounting']['run'];
+      }      
    }
    if ($subjid == "") {
-     echo(json_encode ( array( "message" => "Error: no subject id assigned" ) ) );
+     echo(json_encode ( array( "ok" => 0, "message" => "Error: no subject id assigned" ) ) );
      return;
    }
    if ($sessionid == "") {
-     echo(json_encode ( array( "message" => "Error: no session specified" ) ) );
+     echo(json_encode ( array( "ok" => 0, "message" => "Error: no session specified" ) ) );
+     return;
+   }
+   if ($run == "") {
+     echo(json_encode ( array( "ok" => 0, "message" => "Error: no run specified" ) ) );
      return;
    }
 
   // this event will be saved at this location
-  $events_file = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site . "/dd_".$subjid."_".$sessionid.".json";
+  $events_file = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site . "/dd_".$subjid."_".$sessionid."_".$run.".json";
+
+  $dd = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site;
+  if (!file_exists($dd)) {
+     mkdir($dd,0777);
+  }
 
   if (file_exists($events_file)) {
-     echo(json_encode ( array( "message" => "Error: this session already exists, overwrite session is not possible" ) ) );
+     echo(json_encode ( array( "ok" => 0, "message" => "Error: this session already exists, overwrite session is not possible" ) ) );
      return;
   }
   
-  $ar = array( "data" => [], "serverDate" => date("Y/m/d"), "serverTime" => date("h:i:sa"), "site" => $site, "subjectid" => $subjid, "session" => $sessionid );
+  $ar = array( "data" => [],
+               "serverDate" => date("Y/m/d"),
+               "serverTime" => date("h:i:sa"),
+	       "site" => $site,
+	       "subjectid" => $subjid,
+	       "session" => $sessionid,
+	       "run" => $run
+  );
   if (isset($_POST['data'])) {
      $ar['data'] = json_decode($_POST['data'], true);
   }
@@ -65,5 +84,5 @@
      $ar['assessmentDate'] = $_POST['date'];
   }
   file_put_contents($events_file, json_encode( $ar, JSON_PRETTY_PRINT ));
-
+  echo (json_encode( array( "ok" => 1, "message" => "Saved data on server" ) ));
 ?>

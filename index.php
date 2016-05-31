@@ -35,18 +35,23 @@
   // if there is a running session it would have the follow information
   $subjid = "";
   $sessionid = "";
-  if( isset($_SESSION['ABCD']) && isset($_SESSION['ABCD']['delayed-discounting']) ) {
-     if (isset($_SESSION['ABCD']['delayed-discounting']['subjid'])) {
-        $subjid  = $_SESSION['ABCD']['delayed-discounting']['subjid'];
+  $run = "";
+  if( isset($_SESSION['ABCD']) && isset($_SESSION['ABCD']['delay-discounting']) ) {
+     if (isset($_SESSION['ABCD']['delay-discounting']['subjid'])) {
+        $subjid  = $_SESSION['ABCD']['delay-discounting']['subjid'];
      }
-     if (isset($_SESSION['ABCD']['delayed-discounting']['sessionid'])) {
-        $sessionid  = $_SESSION['ABCD']['delayed-discounting']['sessionid'];
+     if (isset($_SESSION['ABCD']['delay-discounting']['sessionid'])) {
+        $sessionid  = $_SESSION['ABCD']['delay-discounting']['sessionid'];
+     }
+     if (isset($_SESSION['ABCD']['delay-discounting']['run'])) {
+        $run  = $_SESSION['ABCD']['delay-discounting']['run'];
      }
   }
 
-  echo('<script type="text/javascript"> subjid = "'.$subjid.'"; </script>'."\n");
+  echo('<script type="text/javascript"> subjid  = "'.$subjid.'"; </script>'."\n");
   echo('<script type="text/javascript"> session = "'.$sessionid.'"; </script>'."\n");
-  echo('<script type="text/javascript"> site = "'.$site.'"; </script>'."\n");
+  echo('<script type="text/javascript"> run     = "'.$run.'"; </script>'."\n");
+  echo('<script type="text/javascript"> site    = "'.$site.'"; </script>'."\n");
 ?>
 
 <!DOCTYPE html>
@@ -105,6 +110,7 @@
             <li><a href="#" id="user_name"></a></li>
             <li><a href="#" class="subject-id"></a></li>
             <li><a href="#" class="session-id"></a></li>
+            <li><a href="#" class="run-id"></a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#" onclick="closeSession();">Close Session</a></li>
             <li><a href="#" onclick="logout();">Logout</a></li>
@@ -193,13 +199,25 @@
 
                   <div class="form-group">
                     <label for="session-participant" class="control-label">Participant</label>
-                    <input type="text" class="form-control" placeholder="NDAR-#####" id="session-participant" required data-validation-required-message="Please enter the participant NDAR ID." autofocus>
+                    <!-- <input type="text" class="form-control" placeholder="NDAR-#####" id="session-participant" required data-validation-required-message="Please enter the participant NDAR ID." autofocus> -->
+		    <select class="form-control" id="session-participant"></select>
                     <p class="help-block text-danger"></p>
                   </div>
 
                   <div class="form-group">
                     <label for="session-name" class="control-label">Session name</label>
-                    <input type="text" class="form-control" placeholder="Baseline-01" id="session-name" required data-validation-required-message="Please enter the session ID.">
+		    <select class="form-control" id="session-name"></select>
+                    <!-- <input type="text" class="form-control" placeholder="Baseline-01" id="session-name" required data-validation-required-message="Please enter the session ID."> -->
+                    <p class="help-block text-danger"></p>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="session-run" class="control-label">Session run</label>
+		    <select class="form-control" id="session-run">
+		      <option value="01">01</option>
+		      <option value="02">02</option>
+		      <option value="03">03</option>
+		    </select>		  
                     <p class="help-block text-danger"></p>
                   </div>
 
