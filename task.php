@@ -63,7 +63,9 @@
     <script src="js/jspsych/plugins/jspsych-text.js"></script>
     <script src="js/jspsych/plugins/jspsych-single-stim.js"></script>
     <script src="js/jspsych/plugins/jspsych-button-response.js"></script>
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <!-- Load plotting library -->
+    <script src="js/plotly-latest.min.js"></script>
+    
     <!-- Load the stylesheet -->
     <!-- <link href="experiment.css" type="text/css" rel="stylesheet"></link> -->
     <link href="js/jspsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -172,6 +174,10 @@ a:hover { color: #ffffff }
     <div id="jspsych_target"></div>
   </body>
   
+  <!-- Load the math libraries to calculate scores -->
+  <script src="js/ml-matrix-bundle.js"></script>
+  <script src="js/curve-fit-bundle.js"></script>
+
   <script>
 
 function exportToCsv(filename, rows) {
@@ -302,6 +308,8 @@ fontsize = 60;
 amtText=['',''];
 amtText0I='';
 amtText0D='';
+k=0;
+JBpass=false;
 
 // get a string for this number that has a comma at the thousands place
 function group(number) {
@@ -381,7 +389,7 @@ function getState(t) {
 			console.log("IPs: " + IPs.join(","));
 
 			JB1 = 0;
-			for (var i = 0; i < numdelays.length-1; i++) {
+			for (var i = 0; i < numdelays-1; i++) {
 			    if (IPs[i+1]-IPs[i] > 0.2)
 				JB1 = JB1 + 1;
 			}
@@ -396,8 +404,27 @@ function getState(t) {
 			    JBpass = "No";
 			console.log("JB Rule 1, " + JB1);
 			console.log("JB Rule 2, " + JB2);
+			
                         //xvalues = numpy.array(xx)
 			//yvalues = numpy.array(IPs)
+			xvalues = xx;
+			yvalues = IPs;
+			var data = [];
+			for (var i = 0; i < xx.length; i++) {
+			   data.push([xvalues[i], yvalues[i]]);
+		        }
+			var f = function(x, k) {
+			    var result = cf.getMatrix(x.rows, x.columns);
+			    for (var i = 0; i < x.rows; i++)
+				result[i][0] = 1/(1+(x[i][0]*k[0]));
+			    return result;
+			}
+		     
+			cf.curve_fit(data, f, [-2], [2]);
+			console.log("Consistency: " + JBpass);
+			console.log("k: " + cf.params[0][0]);
+			k=cf.params[0][0];
+			console.log("ln(k) : " + Math.log(cf.params[0][0]));
 			//popt, pconv = curve_fit(func, xvalues, yvalues, p0 = 0.01)
 			//screenText2[0] = "Consistency: %s" % (JBpass)
 			//screenText[1] = "k value: %2.4f" % (float(popt))
@@ -504,6 +531,9 @@ var test_block = {
 	    // we should store the delays and IPs as well
 	    var d = {};
 	    sorteddelays.forEach(function( val, key) { d["IP "+val] = IPs[key]; });
+	    d.k = k;
+	    d.logk = Math.log(k);
+	    d.Consistency = JBpass;
 	    jsPsych.data.addDataToLastTrial(d);
 	    
 	    jQuery.post('code/php/events.php',
