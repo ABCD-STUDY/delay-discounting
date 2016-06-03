@@ -308,9 +308,13 @@ fontsize = 60;
 amtText=['',''];
 amtText0I='';
 amtText0D='';
-k=0;
-JBpass=false;
-
+var k=0;
+var JBpass="FAIL";
+var CRC01 = "FAIL";
+var CRC02 = "FAIL";
+var JB1=0;
+var JB2=0;
+		    
 // get a string for this number that has a comma at the thousands place
 function group(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -397,11 +401,17 @@ function getState(t) {
 			if (IPs[0] - IPs[numdelays-1] < 0.1) {
 			    JB2 = 1;
 			}
-			JBpass = "Yes";
-			if (JB1 > 1)
-			    JBpass = "No";
-			if (JB2 > 0)
-			    JBpass = "No";
+			JBpass = "PASS";
+			CRC01 = "PASS";
+			CRC02 = "PASS";
+			if (JB1 > 1) {
+			       JBpass = "FAIL";
+			       CRC01 = "FAIL";
+			}
+			if (JB2 > 0) {
+			  JBpass = "FAIL";
+			  CRC02 = "FAIL";
+			}
 			console.log("JB Rule 1, " + JB1);
 			console.log("JB Rule 2, " + JB2);
 			
@@ -421,6 +431,8 @@ function getState(t) {
 			}
 		     
 			cf.curve_fit(data, f, [-2], [2]);
+			console.log("Consistent responding check (0.1 criterion): " + JB1);
+			console.log("Consistent responding check (0.2 criterion): " + JB2);
 			console.log("Consistency: " + JBpass);
 			console.log("k: " + cf.params[0][0]);
 			k=cf.params[0][0];
@@ -534,6 +546,8 @@ var test_block = {
 	    d.k = k;
 	    d.logk = Math.log(k);
 	    d.Consistency = JBpass;
+	    d.Consistent_resp_check01 = CRC01;
+	    d.Consistent_resp_check02 = CRC02;
 	    jsPsych.data.addDataToLastTrial(d);
 	    
 	    jQuery.post('code/php/events.php',
