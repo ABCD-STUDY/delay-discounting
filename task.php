@@ -224,7 +224,7 @@ function exportToCsv(filename, rows) {
 
 
     // we need to query for key "1"/"left cursor" or "6"/"right cursor" 
-    var instructions = "<p>In this game, you will be asked to make some choices between getting some amount of money right now or waiting instead to get a larger amount of money in the future.</p><br/><p>These money amounts are pretend. You won't actually get these amounts of money for this game, but we ask you to choose between the amounts of money as if they were real.</p><br/><p>You need to use the L and R buttons to make each choice, and you can take as much time as you need to make your choice.</p><br/><p>Press the button to begin.</p>";
+    var instructions = "<p>In this game, you will be asked to make some choices between getting some amount of money right now or waiting to get a larger amount of money in the future.</p><br/><p>These money amounts are pretend. You won't actually get these amounts of money for this game, but we ask you to choose between the amounts of money as if they were real.</p><br/><p>You need to use the L and R buttons to make each choice, and you can take as much time as you need to make your choice.</p><br/><p>Press the button to begin.</p>";
 
     var instructions2 = "<p>Press '8' for left choice, press '9' for right choice.</p>";
 
@@ -549,9 +549,11 @@ var test_block = {
 	    d.Consistent_resp_check01 = CRC01;
 	    d.Consistent_resp_check02 = CRC02;
 	    jsPsych.data.addDataToLastTrial(d);
-	    
+
+	    ud = makeUnique( jsPsych.data.getData(), 'ded_' );
+			  
 	    jQuery.post('code/php/events.php',
-			{ "data": JSON.stringify(jsPsych.data.getData()), "date": moment().format() }, function(data) {
+			{ "data": JSON.stringify(ud), "date": moment().format() }, function(data) {
 			    if (typeof data.ok == 'undefined' || data.ok == 0) {
 				//  alert('Error: ' + data.message);
 			    }
@@ -564,7 +566,38 @@ var test_block = {
 	    });
 	     
        }
-    });
+   });
+			  
+function makeUnique( data, prefix ) {
+    
+    var build, key, destKey, value;
+    
+    build = {};
+    if (typeof data === "object") {
+	if (data instanceof Array) { // don't change the array, only traverse
+	    for (var i = 0; i < data.length; i++) {
+		data[i] = makeUnique(data[i], prefix);
+	    }
+	    return data;
+	} else {
+	    for (key in data) {
+		// Get the destination key
+		destKey = prefix + key;
+
+		// Get the value
+		value = data[key];
+
+		value = makeUnique(value, prefix);
+
+		build[destKey] = value;
+	    }
+	}	
+    } else {
+	return data;
+    }
+
+    return build;
+}
     
 </script>
 </html>
