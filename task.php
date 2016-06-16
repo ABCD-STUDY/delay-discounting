@@ -542,18 +542,18 @@ var test_block = {
 	on_finish: function(data) {
 	    // we should store the delays and IPs as well
 	    var d = {};
-	    sorteddelays.forEach(function( val, key) { d["IP "+val] = IPs[key]; });
-	    d.k = k;
-	    d.logk = Math.log(k);
-	    d.Consistency = JBpass;
-	    d.Consistent_resp_check01 = CRC01;
-	    d.Consistent_resp_check02 = CRC02;
-	    jsPsych.data.addDataToLastTrial(d);
+	    sorteddelays.forEach(function( val, key) { v = val.replace(' ', '_'); d["ded_ip_"+v] = IPs[key]; });
+	    d.ded_k = k;
+	    d.ded_logk = Math.log(k);
+	    d.ded_consistency = JBpass;
+	    d.ded_cons_resp_check01 = CRC01;
+	    d.ded_cons_resp_check02 = CRC02;
+	    // jsPsych.data.addDataToLastTrial(d);
 
 	    ud = makeUnique( jsPsych.data.getData(), 'ded_' );
 			  
 	    jQuery.post('code/php/events.php',
-			{ "data": JSON.stringify(ud), "date": moment().format() }, function(data) {
+			{ "data": JSON.stringify(ud), "date": moment().format(), "toplevel": d }, function(data) {
 			    if (typeof data.ok == 'undefined' || data.ok == 0) {
 				//  alert('Error: ' + data.message);
 			    }
