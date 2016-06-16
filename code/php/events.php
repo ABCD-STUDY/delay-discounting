@@ -32,13 +32,14 @@
    $subjid = "";
    $sessionid = "";
    $active_substances = array();
+   $run = "";
    if ( isset($_SESSION['ABCD']) && isset($_SESSION['ABCD']['delay-discounting']) ) {
       if (isset($_SESSION['ABCD']['delay-discounting']['subjid'])) {  
          $subjid  = $_SESSION['ABCD']['delay-discounting']['subjid'];
       }
       if (isset($_SESSION['ABCD']['delay-discounting']['sessionid'])) {
          $sessionid  = $_SESSION['ABCD']['delay-discounting']['sessionid'];
-      }      
+      }
       if (isset($_SESSION['ABCD']['delay-discounting']['run'])) {
          $run  = $_SESSION['ABCD']['delay-discounting']['run'];
       }      
@@ -55,9 +56,26 @@
      echo(json_encode ( array( "ok" => 0, "message" => "Error: no run specified" ) ) );
      return;
    }
+  $action = "save";
+  if (isset($_POST['action'])) {
+    $action = $_POST['action'];
+  }
 
   // this event will be saved at this location
-  $events_file = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site . "/dd_".$subjid."_".$sessionid."_".$run.".json";
+  $events_file = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site . "/ded_".$subjid."_".$sessionid."_".$run.".json";
+
+  if ($action == "test") {
+     // test if the current file exists already
+     if (file_exists($events_file)) {
+       echo(json_encode ( array( "message" => "Error: this session already exists, overwrite session is not possible", "ok" => "0" ) ) );
+       return;
+     }
+     echo(json_encode ( array( "message" => "save ok", "ok" => "1" ) ) );
+     return;
+  } else if ($action == "mark" ){
+      // for now ignore this
+      return;
+  }
 
   $dd = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site;
   if (!file_exists($dd)) {
@@ -69,20 +87,27 @@
      return;
   }
   
-  $ar = array( "data" => [],
-               "serverDate" => date("Y/m/d"),
-               "serverTime" => date("h:i:sa"),
-	       "site" => $site,
-	       "subjectid" => $subjid,
-	       "session" => $sessionid,
-	       "run" => $run
+  $ar = array( "data"              => [],
+               "ded_server_date"    => date("Y/m/d"),
+               "ded_server_time"    => date("h:i:sa"),
+	       "ded_site"          => $site,
+	       "ded_subject_id"    => $subjid,
+	       "ded_run"           => $run,
+	       "ded_event_name"    => $sessionid,
+	       "record_id"         => $subjid,
+	       "redcap_event_name" => $sessionid
   );
+  if (isset($_POST['toplevel'])) {
+       foreach($_POST['toplevel'] as $key => $value) {
+   	  $ar[$key] = $value;
+       }
+  }
   if (isset($_POST['data'])) {
      $ar['data'] = json_decode($_POST['data'], true);
   }
   if (isset($_POST['date'])) {
-     $ar['assessmentDate'] = $_POST['date'];
+     $ar['ded_assessment_date'] = $_POST['date'];
   }
   file_put_contents($events_file, json_encode( $ar, JSON_PRETTY_PRINT ));
-  echo (json_encode( array( "ok" => 1, "message" => "Saved data on server" ) ));
+  echo (json_encode( array( "ok" => "1", "message" => "Saved session" ) ));
 ?>
