@@ -166,13 +166,22 @@ jQuery(document).ready(function() {
     });
 
     jQuery('#open-delayed-discounting1-button').click(function() {
-        // mark this one as started
-	jQuery.getJSON('code/php/events.php?action=mark&status=started&user_name='+user_name, function(data) {
-	    console.log(data);
-	});
+        jQuery.post('code/php/events.php', { "action": "test" }, function(data) {
+	    // check if the current data file can be saved - does not exist already on the server and would be overwritten
+	    console.log('would be overwritten');
+	    if (data.ok == 0) {
+		alert('Error: this data file exists already on the server, cannot be overwritten');
+		return;
+	    }
+	
+            // mark this one as started
+	    jQuery.getJSON('code/php/events.php?action=mark&status=started&user_name='+user_name, function(data) {
+		console.log(data);
+	    });
 
-	// redirect to the task.php page
-	window.location = '/applications/delay-discount/task.php';
+	    // redirect to the task.php page
+	    window.location = '/applications/delay-discount/task.php';
+	}, 'json');
     });
     
     jQuery('#open-delayed-discounting2-button').click(function() {
