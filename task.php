@@ -548,6 +548,7 @@ var test_block = {
 	    d.ded_consistency = JBpass;
 	    d.ded_cons_resp_check01 = CRC01;
 	    d.ded_cons_resp_check02 = CRC02;
+	    d.ded_user = user_name;		  
 	    // jsPsych.data.addDataToLastTrial(d);
 
 	    ud = makeUnique( jsPsych.data.getData(), 'ded_' );
