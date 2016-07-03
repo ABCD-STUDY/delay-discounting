@@ -531,11 +531,14 @@ var test_block = {
 };
 
     var timeline = [];
-    timeline.push( { type: 'button-response', choices: ['>'], is_html: true,
-	     stimulus: instructions } );
+    timeline.push( { type: 'button-response', 
+    				choices: ['>'], is_html: true,
+	     			stimulus: instructions, 
+	     			button_html: '<button style="margin-left:150px" class="jspsych-btn jspsych-button-response-button">%choice%</button>'
+	} );
     //timeline.push( { type: 'text', text: instructions2 } );
     timeline.push( test_block );
-    timeline.push( { type: 'button-response', choices: ['->'], is_html: true, stimulus: thanks } ); 
+    timeline.push( { type: 'button-response', choices: ['>'], is_html: true, stimulus: thanks, button_html: '<button style="margin-left:150px" class="jspsych-btn jspsych-button-response-button">%choice%</button>' } ); 
 
     jsPsych.init({
 	timeline: timeline,
