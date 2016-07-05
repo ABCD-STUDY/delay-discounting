@@ -94,7 +94,7 @@
 	       "ded_subject_id"    => $subjid,
 	       "ded_run"           => $run,
 	       "ded_event_name"    => $sessionid,
-	       "record_id"         => $subjid,
+	       "id_redcap"         => $subjid,
 	       "redcap_event_name" => $sessionid
   );
   if (isset($_POST['toplevel'])) {
