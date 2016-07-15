@@ -499,7 +499,8 @@ var all_trials = Array.apply(null, { length: 1168 }).map(function(a) { return [c
 t = 6; // this is a time - but we control time differently here... we should not use that t parameter
 var test_block = {
     type: 'single-stim',
-    choices: ['L','R'],
+	choices: ['<center><div><img src="l.png"></div></center>',
+'<center><div><img src="r.png"></div></center>'],
     timeline: all_trials,
     on_finish: function(data) {
 	if (data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('esc'))
@@ -530,6 +531,8 @@ var test_block = {
     }
 };
 
+	var button_images = ["r.png","l.png"];
+
     var timeline = [];
     timeline.push( { type: 'button-response', 
     				choices: ['>'], is_html: true,
@@ -540,6 +543,9 @@ var test_block = {
     timeline.push( test_block );
     timeline.push( { type: 'button-response', choices: ['>'], is_html: true, stimulus: thanks, button_html: '<button style="margin-left:150px" class="jspsych-btn jspsych-button-response-button">%choice%</button>' } ); 
 
+	jsPsych.pluginAPI.preloadImages(button_images, function(){startExperiment();});
+
+function startExperiment(){
     jsPsych.init({
 	timeline: timeline,
 	on_finish: function(data) {
@@ -571,6 +577,7 @@ var test_block = {
 	     
        }
    });
+}
 			  
 function makeUnique( data, prefix ) {
     
