@@ -228,7 +228,7 @@ function exportToCsv(filename, rows) {
 
     var instructions2 = "<p>Press '8' for left choice, press '9' for right choice.</p>";
 
-    var thanks = "<center><p>Thank you for participating!</p><br/><p>Great job, let’s try another task!</p></center>";
+    var thanks = "<center><p><br/>Great job, let’s try another task!</p></center>";
 
 //
 // The following code has been translated from python code originally written by
