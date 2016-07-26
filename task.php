@@ -574,7 +574,7 @@ function startExperiment(){
 			    exportToCsv("Delay-Discounting-Task_" + Site + "_" + SubjectID + "_" + Session + "_" + moment().format() + ".csv",
 		  			jsPsych.data.getData());			
 	    });
-	   document.body.innerHTML = '<form action="https://abcd-report.ucsd.edu/"><button type="submit">Return to Homepage</button></form>';
+	   document.body.innerHTML = '<center><form action="https://abcd-report.ucsd.edu/"><button style="height:200px;width:400px;font-size:48px;border-radius: 15px;" type="submit">Return to ABCD-Report Homepage</button></form></center>';
        }
    });
 }
