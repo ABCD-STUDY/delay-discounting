@@ -563,7 +563,7 @@ function startExperiment(){
 	    ud = makeUnique( jsPsych.data.getData(), 'ded_' );
 			  
 	    jQuery.post('code/php/events.php',
-			{ "data": JSON.stringify(ud), "date": moment().format(), "toplevel": d }, function(data) {
+			{ "data": JSON.stringify(ud), "date": moment().format(), "toplevel": JSON.stringify(d) }, function(data) {
 			    if (typeof data.ok == 'undefined' || data.ok == 0) {
 				//  alert('Error: ' + data.message);
 			    }

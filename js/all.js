@@ -175,9 +175,9 @@ jQuery(document).ready(function() {
 	    }
 	
             // mark this one as started
-	    jQuery.getJSON('code/php/events.php?action=mark&status=started&user_name='+user_name, function(data) {
+	    jQuery.post('code/php/events.php' { "action": "mark", "status": "started", "user_name": user_name }, function(data) {
 		console.log(data);
-	    });
+	    }, 'json');
 
 	    // redirect to the task.php page
 	    window.location = '/applications/delay-discount/task.php';

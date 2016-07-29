@@ -75,6 +75,8 @@
   } else if ($action == "mark" ){
       // for now ignore this
       return;
+  } else {
+      // we make the assumption this is now action == "save"
   }
 
   $dd = $_SERVER['DOCUMENT_ROOT']."/applications/delay-discount/data/" . $site;
