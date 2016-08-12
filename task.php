@@ -175,11 +175,15 @@ a:hover { color: #ffffff }
   </body>
   
   <!-- Load the math libraries to calculate scores -->
-  <script src="js/ml-matrix-bundle.js"></script>
+  <script src="js/ml-matrix-bundle.js" type="text/javascript"></script>
   <script src="js/curve-fit-bundle.js"></script>
 
   <script>
 
+if (typeof cf == 'undefined') {
+   alert("Error: could not load a required library to calculate scores. Please contact the ABCD DAIC. Scores will not be saved.");
+}
+    
 function exportToCsv(filename, rows) {
     var k = { "SubjectID": 1, "Site": 1, "Session": 1 };
     for (var i = 0; i < rows.length; i++) {
@@ -429,7 +433,11 @@ function getState(t) {
 				result[i][0] = 1/(1+(x[i][0]*k[0]));
 			    return result;
 			}
-		     
+			// check if cf was loaded
+ 			if (typeof cf == 'undefined') {
+			   alert("Error: could not load a required library to calculate scores. Please contact the ABCD DAIC.");
+			   return;
+			}
 			cf.curve_fit(data, f, [-2], [2]);
 			console.log("Consistent responding check (0.1 criterion): " + JB1);
 			console.log("Consistent responding check (0.2 criterion): " + JB2);
