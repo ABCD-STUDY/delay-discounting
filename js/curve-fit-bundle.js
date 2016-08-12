@@ -3015,7 +3015,7 @@ class Matrix extends Array {
      * @param {number} value - The new value for the element
      * @returns {Matrix} this
      */
-    set(rowIndex, columnIndex, value) {
+    setF(rowIndex, columnIndex, value) {
         this[rowIndex][columnIndex] = value;
         return this;
     }
@@ -3026,7 +3026,7 @@ class Matrix extends Array {
      * @param {number} columnIndex - Index of the column
      * @returns {number}
      */
-    get(rowIndex, columnIndex) {
+    getF(rowIndex, columnIndex) {
         return this[rowIndex][columnIndex];
     }
 
